@@ -32,7 +32,8 @@ bot.on("text", async msg=>{
        })
     }else if(msg.text == "/link"){
         await bot.sendMessage(msg.chat.id,`https://habr.com`,{
-            disable_web_page_preview:true
+            disable_web_page_preview:true,
+            disable_notification:true
         });
     }else{
         await bot.sendMessage(msg.chat.id,msg.text)
