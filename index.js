@@ -11,8 +11,12 @@ const bot = new TelegramBot(process.env.TOKEN,{
 bot.on("polling_error",(err)=>{console.log(err.data.error.message)})
 
 bot.on("text", async msg=>{
-    await bot.sendMessage(msg.chat.id, helper.debug(msg));
-})
+   const msgWait =  await bot.sendMessage(msg.chat.id,"Бот генерирует ответ");
+   setTimeout(async ()=>{
+    await bot.deleteMessage(msg.chat.id, msgWait.message_id);
+    await bot.sendMessage(msg.chat.id,msg.text + " addendum");
+   },4000)
+})//on
 
 
 
