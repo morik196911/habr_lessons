@@ -1,3 +1,3 @@
-*Lesson - функция setTimeout задержка ответа и добавление *
-__Example__
+*Lesson - отправка реферальной ссылки *
+Добавление команд, сохранение ссылки в .env 
 `Do not forget creating file .env with token bot`
