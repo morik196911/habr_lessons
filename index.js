@@ -14,7 +14,7 @@ bot.on("polling_error",(err)=>{console.log(err.data.error.message)})
 bot.on("text", async msg=>{
   try {
     if(msg.text.startsWith("/start")){
-        await bot.sendMessage(msg.chat.id,"Вы запустили бота !!!");
+        await bot.sendMessage(msg.chat.id,`Вы запустили бота !!!🤢`);
       if(msg.text.length > 6){
         const ref_id = msg.text.slice(7);
         await bot.sendMessage(msg.chat.id,`Вы зашли по ссылке ${ref_id}`)
@@ -23,6 +23,17 @@ bot.on("text", async msg=>{
     }else if(msg.text == "/ref"){
         await bot.sendMessage(msg.chat.id,`${process.env.URL_BOT}?start=${msg.from.id}`)
        
+    }else if(msg.text == "/help"){
+     await  bot.sendMessage(msg.chat.id, "Раздел помощи\n <b>Fat</b>\n<i>Italik</i>",{
+        parse_mode:"HTML"
+       })
+       await bot.sendMessage(msg.chat.id,"_Italik_\n*FatMurcdaun*",{
+        parse_mode:"MarkdownV2"
+       })
+    }else if(msg.text == "/link"){
+        await bot.sendMessage(msg.chat.id,`https://habr.com`,{
+            disable_web_page_preview:true
+        });
     }else{
         await bot.sendMessage(msg.chat.id,msg.text)
     }

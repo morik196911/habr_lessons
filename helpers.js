@@ -15,6 +15,10 @@ module.exports={
             command: "help",
             description: "Раздел помощи"   
         },
+        {
+            command:"link",
+            description:"Ссылки"
+        }
     
     ]
 }//module
