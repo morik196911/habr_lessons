@@ -11,7 +11,11 @@ const bot = new TelegramBot(process.env.TOKEN,{
 bot.on("polling_error",(err)=>{console.log(err.data.error.message)})
 
 bot.on("text", async msg=>{
+    try{
     await bot.sendMessage(msg.chat.id, helper.debug(msg));
+    }catch(error){
+        console.log(error)
+    }
 })
 
 
