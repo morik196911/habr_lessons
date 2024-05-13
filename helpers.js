@@ -18,6 +18,10 @@ module.exports={
         {
             command:"link",
             description:"Ссылки"
+        },
+        {
+            command:"menu",
+            description:"Меню "
         }
     
     ]
