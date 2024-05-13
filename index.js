@@ -3,6 +3,7 @@ const dot = require("dotenv");
 dot.config();
 const helper = require("./helpers");
 const fs = require("fs");
+const { type } = require("os");
 const bot = new TelegramBot(process.env.TOKEN,{
     polling:{
         interval:300,
@@ -73,12 +74,31 @@ bot.on("text", async msg=>{
   }
 })//on
 
-bot.on("photo", async img=>{
-  try{
-    await bot.downloadFile(img.photo[img.photo.length-1].file_id, "./upload");
-  }catch(error){
-    console.log(error)
-  }
+bot.on('photo', async img => {
+    try {
+        const photoGroup = [];
+        for(let index = 0; index < img.photo.length; index++) {
+            const photoPath = await bot.downloadFile(img.photo[index].file_id, './upload');
+            photoGroup.push({
+                type: 'photo',
+                media: photoPath,
+                caption: `Размер файла: ${img.photo[index].file_size} байт\nШирина: ${img.photo[index].width}\nВысота: ${img.photo[index].height}`
+            })
+        }//for
+        await bot.sendMediaGroup(img.chat.id, photoGroup);
+        for(let index = 0; index < photoGroup.length; index++) {
+            fs.unlink(photoGroup[index].media, error => {
+                if(error) {
+                    console.log(error);
+                }
+            })//fs.unlink
+
+        }//for
+
+    }//try
+    catch(error) {
+        console.log(error);
+    }
 })//on photo
 
 
