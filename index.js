@@ -43,7 +43,7 @@ bot.on("text", async msg=>{
         keyboard:[
             ["🤔 Картинка","🤔 Видео"],
             ["👑 Аудио"," 👑 Голосовое сообщение"],
-            ['⭐️ Контакт', '⭐️ Геолокация'],
+            [{text:'⭐️ Контакт',request_contact:true}, {text: '⭐️ Геолокация', request_location: true}],
                 ['❌ Закрыть меню']
         ],
         resize_keyboard:true
@@ -66,6 +66,28 @@ bot.on("text", async msg=>{
        caption:"<b>☺️ Подпись к картинке</b>" ,
        parse_mode:"HTML"      
         })
+    }else if(msg.text == "🤔 Видео"){
+   await bot.sendVideo(msg.chat.id,"./video/comedy.mp4",{
+    caption:"<b>🤔 Видео</b>",
+    parse_mode:"HTML"
+   });
+    }else if(msg.text == "👑 Аудио"){
+ await bot.sendAudio(msg.chat.id,"./audio/fristail.mp3")
+    }else if(msg.text == "👑 Голосовое сообщение"){
+await bot.sendVoice(msg.chat.id,"./audio/fristail.mp3",{
+    caption:"<b>👑 Голосовое сообщение</b>",
+    parse_mode:"HTML"
+})
+    }else if(msg.text == "⭐️ Контакт"){
+await bot.sendContact(msg.chat.id,process.env.CONTACT,"Контакт",{
+    reply_to_message_id:msg.message_id
+})
+    }else if(msg.text == "⭐️ Геолокация"){
+        const latitudeOfRedSquare = 55.753700;
+    const longitudeOfReadSquare = 37.621250;
+await bot.sendLocation(msg.chat.id,latitudeOfRedSquare,longitudeOfReadSquare,{
+    reply_to_message_id:msg.message_id
+})
     }else{
         await bot.sendMessage(msg.chat.id,msg.text) 
     }
@@ -101,5 +123,72 @@ bot.on('photo', async img => {
     }
 })//on photo
 
+bot.on("video", async video => {
+    try {
+        const thumbPath = await bot.downloadFile(video.video.thumbnail.file_id, './video');
+        await bot.sendMediaGroup(video.chat.id, [          
+            {
+                type: 'video',
+                media: video.video.file_id,
+                caption: `Название файла: ${video.video.file_name}\nВес файла: ${video.video.file_size} байт\nДлительность видео: ${video.video.duration} секунд\nШирина кадра в видео: ${video.video.width}\nВысота кадра в видео: ${video.video.height}`
+            },
+            {
+                type: 'photo',
+                media: thumbPath,
+            }
+        ]);
 
+        fs.unlink(thumbPath, error => {
+            if(error) {
+                console.log(error);
+            }
+        })
+    }
+    catch(error) {
+        console.log(error);
+    }
+})//on video
 
+bot.on('audio', async audio => {
+    try {
+        await bot.sendAudio(audio.chat.id, audio.audio.file_id, {
+            caption: `Название файла: ${audio.audio.file_name}\nВес файла: ${audio.audio.file_size} байт\nДлительность аудио: ${audio.audio.duration} секунд`
+        })
+    }
+    catch(error) {
+        console.log(error);
+    }
+})//on audio
+
+bot.on("voice",async voice=>{
+ try{
+    await bot.sendAudio(voice.chat.id, voice.voice.file_id, {
+caption: `Вес файла: ${voice.voice.file_size} байт\nДлительность аудио: ${voice.voice.duration} секунд`
+    })
+ }catch(error){
+    console.log(error);
+ }
+})//on voice
+
+bot.on("contact",async contact=>{
+    try{
+ await bot.sendContact(contact.chat.id,`Number contact:${contact.contact.phone_number}\nName contact ${contact.contact.first_name}`)
+    }catch(error){
+        console.log(error);
+    }
+})//on contact
+
+bot.on('location', async location => {
+
+    try {
+
+        await bot.sendMessage(location.chat.id, `Широта: ${location.location.latitude}\nДолгота: ${location.location.longitude}`);
+
+    }
+    catch(error) {
+
+        console.log(error);
+
+    }
+
+})//on location
