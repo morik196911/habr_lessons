@@ -215,9 +215,59 @@ await bot.deleteMessage(ctx.message.reply_to_message.chat.id, ctx.message.reply_
     case "sticker":
 await bot.sendSticker(ctx.message.chat.id, "./stickers/Bosya2.webp")
     break
+    case "circleVideo":
+ await bot.sendVideoNote(ctx.message.chat.id, './video/video.mp4',{
+    protect_content:true
+ });
+    break;
+    case "checkSubs":
+    const subscribe = await bot.getChatMember(process.env.ID_CHAT, ctx.from.id);  
+    if(subscribe.status == 'left' || subscribe.status == 'kicked') {
+        await bot.sendMessage(ctx.message.chat.id, `<b>Вы не являетесь подписчиком!</b>`, {
+            parse_mode: 'HTML' 
+        })  
+    }
+    else {
+        await bot.sendMessage(ctx.message.chat.id, '<b>Вы являетесь подписчиком!</b>', {
+            parse_mode: 'HTML'
+        })
+    }
+ 
+    break;
+    case "buyFile":
+  await bot.sendInvoice(ctx.message.chat.id, 
+                      'Купить Файл', 
+                      'Покупка файла', 
+                      'file', 
+                      process.env.PROVIDER_TOKEN, 
+                      'RUB', 
+                      [{                        
+                          label: 'Файл',
+                          amount: 20000                      
+                      }]);
+  break;
   }//switch
  }catch(error){
     console.log(error)
  }
 })//on callback
+
+bot.on('pre_checkout_query', async ctx => {
+    try {
+        await bot.answerPreCheckoutQuery(ctx.id, true);
+    }catch(error) {
+        console.log(error);
+    }
+})//pre_checkout_query
+
+bot.on('successful_payment', async ctx => {
+
+    try {
+        await bot.sendDocument(ctx.chat.id, `./${ctx.successful_payment.invoice_payload}.txt`, {
+            caption: `Спасибо за оплату ${ctx.successful_payment.invoice_payload}!`
+        })
+    }catch(error) {
+        console.log(error);
+    }
+})//successful_payment
 
