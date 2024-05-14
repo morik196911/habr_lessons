@@ -88,6 +88,18 @@ await bot.sendContact(msg.chat.id,process.env.CONTACT,"Контакт",{
 await bot.sendLocation(msg.chat.id,latitudeOfRedSquare,longitudeOfReadSquare,{
     reply_to_message_id:msg.message_id
 })
+    }else if(msg.text == "/second_menu"){
+await bot.sendMessage(msg.chat.id,"Второе меню",{
+    reply_markup:{
+       inline_keyboard:[
+        [{text: 'Стикер', callback_data: 'sticker'}, {text: 'Круглое Видео', callback_data: 'circleVideo'}],
+        [{text: 'Купить Файл', callback_data: 'buyFile'}],
+        [{text: 'Проверить Подписку', callback_data: 'checkSubs'}],
+        [{text: 'Закрыть Меню', callback_data: 'closeMenu'}]
+       ]
+    },
+    reply_to_message_id:msg.message_id
+})
     }else{
         await bot.sendMessage(msg.chat.id,msg.text) 
     }
@@ -192,3 +204,20 @@ bot.on('location', async location => {
     }
 
 })//on location
+
+bot.on("callback_query",async ctx=>{
+ try{
+  switch(ctx.data){
+    case "closeMenu":
+await bot.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
+await bot.deleteMessage(ctx.message.reply_to_message.chat.id, ctx.message.reply_to_message.message_id)
+    break
+    case "sticker":
+await bot.sendSticker(ctx.message.chat.id, "./stickers/Bosya2.webp")
+    break
+  }//switch
+ }catch(error){
+    console.log(error)
+ }
+})//on callback
+

@@ -22,7 +22,12 @@ module.exports={
         {
             command:"menu",
             description:"Меню "
+        },
+        {
+            command:"second_menu",
+            description:"Второе меню "
         }
+    
     
     ]
 }//module
